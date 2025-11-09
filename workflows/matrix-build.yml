@@ -1,0 +1,54 @@
+name: Matrix Build with Artifacts
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14, 16, 18]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: matrix-9a65b33
+        run: echo "Building for Node.js ${{ matrix.node-version }}"
+
+      - name: Generate build artifact
+        run: |
+          echo "Build output for Node.js ${{ matrix.node-version }}" > output.txt
+          echo "metadata: node-version=${{ matrix.node-version }}" >> output.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-9a65b33-v${{ matrix.node-version }}
+          path: output.txt
+````markdown name=README.md
+```markdown
+# Matrix Build Demo
+
+This repository contains a GitHub Actions workflow demonstrating a matrix build that produces artifacts.
+
+What it does
+- Runs a matrix build across Node.js versions: 14, 16, 18 (three parallel jobs).
+- Each job generates a small non-empty artifact (`output.txt`) containing the build output and metadata.
+- Each artifact is uploaded and named with the prefix `build-9a65b33-` (e.g. `build-9a65b33-v14`).
+- The workflow includes a step identifier `matrix-9a65b33`.
+
+Validation checklist
+- At least 3 successful matrix jobs in a run (Node 14, 16, 18).
+- At least 3 artifacts uploaded with prefix `build-9a65b33-`.
+- All artifacts contain non-empty content.
+- README contains contact email.
+
+Contact
+23f3004176@users.noreply.github.com
